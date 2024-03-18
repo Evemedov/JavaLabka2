@@ -101,25 +101,20 @@ public class Player {
 	 */
 	public void lvlUp() {
 		this.healthPoint += 20;
+		this.maxHP += 20;
 		this.armor += 2;
 		this.lvl += 1;
 		this.numOfPotion += 1;
 		
-		while(true) {
-			System.out.println("Що хочете вдосконалити? Меч(1) чи спис(2)?");
-			int res = MainClass.scanner.nextInt();
-			switch(res) {
-			case 1:
-				this.sword = MainClass.tools.getImprovedSword(sword);
-				return;
-			case 2:
-				this.spear = MainClass.tools.getImprovedSpear(spear);
-				return;
-			default:
-				System.out.println("Введіть нормально!");
-			}
+		int res = MainClass.userFunctions.getUsersInput("Що хочете вдосконалити? Меч(1) чи спис(2)?", 2);
+		switch(res) {
+		case 1:
+			this.sword = MainClass.tools.getImprovedSword(sword);
+			return;
+		case 2:
+			this.spear = MainClass.tools.getImprovedSpear(spear);
+			return;
 		}
-		
 	}
 	
 	/**
@@ -144,7 +139,6 @@ public class Player {
 		hp = Math.abs(hp);
 		if(this.healthPoint + hp > this.maxHP) {
 			this.healthPoint = this.maxHP;
-			MainClass.debugLog("Debug: Maximum hp");
 			return;
 		}
 		this.healthPoint += hp;
@@ -164,10 +158,8 @@ public class Player {
 	 */
 	public void dungeonUp() {
 		this.nowDungeon++;
-		if(this.nowDungeon % 3 == 0) {
+		if(this.nowDungeon % 3 == 0)
 			this.lvlUp();
-			MainClass.debugLog("Debug: lvl up");
-		}
 	}
 	/**
 	 * Перевіряє чи не дорівнює {@link characters.Player#numOfPotion} нулю та додає 50 здоров'я
@@ -215,4 +207,5 @@ public class Player {
 	public int getDungeon() {
 		return this.nowDungeon;
 	}
+	
 }

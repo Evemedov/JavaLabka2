@@ -1,7 +1,5 @@
 package tools;
 
-import MainPkg.MainClass; 
-
 /**
  * Клас Tools представляє збірку зброї
  */
@@ -59,10 +57,8 @@ public class Tools {
      * @return Випадковий об'єкт {@link tools.Sword} у визначеному діапазоні
      */
 	public Sword getRandomSword(int fromIndex, int toIndex) {
-		if(fromIndex > toIndex || fromIndex > (this.numOfSwords - 1)) {
+		if(fromIndex > toIndex || fromIndex > (this.numOfSwords - 1))
 			fromIndex = 0;
-			MainClass.debugLog("Warning: uncorrecr value fromIndex in tools.GetRandomSword(int fromIndex, int toIndex)");
-		}
 			
 		int randID = (int)Math.round(Math.random() * Math.min((this.numOfSwords - 1), toIndex) + fromIndex);
 		return this.swords[randID];
@@ -82,10 +78,8 @@ public class Tools {
      * @return Випадковий об'єкт {@link tools.Spear} у визначеному діапазоні
      */
 	public Spear getRandomSpear(int fromIndex, int toIndex) {
-		if(fromIndex > toIndex || fromIndex > (this.numOfSpears - 1)) {
+		if(fromIndex > toIndex || fromIndex > (this.numOfSpears - 1)) 
 			fromIndex = 0;
-			MainClass.debugLog("Warning: uncorrecr value fromIndex in tools.getRandomSpear(int fromIndex, int toIndex)");
-		}
 			
 		int randID = (int)Math.round(Math.random() * Math.min((this.numOfSpears - 1), toIndex) + fromIndex);
 		return this.spears[randID];
@@ -96,10 +90,8 @@ public class Tools {
      * @return Покращена версія вхідного меча
      */
 	public Sword getImprovedSword(Sword sword) {
-		if(sword.GetID() >= this.numOfSwords - 1) {
-			MainClass.debugLog("Warning: Not found improved sword");
+		if(sword.GetID() >= this.numOfSwords - 1) 
 			return sword;
-		}
 		
 		return this.swords[sword.GetID() + 1];
 	}
@@ -109,10 +101,8 @@ public class Tools {
      * @return Покращена версія вхідного списа
      */
 	public Spear getImprovedSpear(Spear spear) {
-		if(spear.GetID() >= this.numOfSwords - 1) {
-			MainClass.debugLog("Warning: Not found improved spear");
+		if(spear.GetID() >= this.numOfSpears - 1) 
 			return spear;
-		}
 		
 		return this.spears[spear.GetID() + 1];
 	}

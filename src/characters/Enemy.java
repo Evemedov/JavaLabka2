@@ -1,7 +1,6 @@
 package characters;
 
-import tools.Spear;
-import tools.Sword;
+import java.util.Random;
 
 /**
  * Клас ворога який буде атакувати гравця та навпаки
@@ -16,13 +15,9 @@ public class Enemy {
 	 */
 	private int armor;
 	/**
-	 * Меч ворога
+	 * Зброя ворога
 	 */
-	private Sword sword;
-	/**
-	 * Спис ворога
-	 */
-	private Spear spear;
+	private Weapon weapon;
 	/**
 	 * Флаг чи живий зараз бот
 	 */
@@ -30,17 +25,17 @@ public class Enemy {
 	
 	/**
 	 * Конструктор класу
-	 * @param sword Екземпляр меча який буде виданий гравцю
-	 * @param spear Екземпляр списа який буде виданий гравцю
 	 * @param lvlOfPlayer Левел гравця. Чим більший цей параметр тим більше здоров'я та броні буде мати бот
 	 */
-	public Enemy(Sword sword, Spear spear, int lvlOfPlayer) {
-		this.healthPoint = 10 * lvlOfPlayer;
-		this.armor = 1 + lvlOfPlayer;
+	public Enemy(int lvlOfPlayer) {
+		Random random = new Random();
+		float randFloat = random.nextFloat(0.8f, 1.2f);
+		
+		this.healthPoint = (int)(10 * lvlOfPlayer * randFloat);
+		this.armor = (int)((1 + lvlOfPlayer) * randFloat);
 		this.IsAlive = true;
 		
-		this.sword = sword;
-		this.spear = spear;
+		weapon = new Weapon( (int)((10 * lvlOfPlayer) * randFloat), 0.05 * lvlOfPlayer );
 	}
 	
 	/**
@@ -72,18 +67,26 @@ public class Enemy {
 	public boolean getIsAlive() {
 		return this.IsAlive;
 	}
-	/**
-	 * Повертає меч ворога
-	 * @return Повертає {@link characters.Enemy#sword}
-	 */
-	public Sword getSword() {
-		return this.sword;
+	
+	public Weapon getWeapon() {
+		return weapon;
 	}
-	/**
-	 * Повертає спис ворога
-	 * @return Повертає {@link characters.Enemy#spear}
-	 */
-	public Spear getSpear() {
-		return this.spear;
+	
+	class Weapon {
+		private int damage;
+		private double armorIgnoring;
+		
+		public Weapon(int damage, double armorIgnoring) {
+			this.damage = damage;
+			this.armorIgnoring = armorIgnoring;
+		}
+		
+		public int GetDamage() {
+			return this.damage;
+		}
+		
+		public double GetArmorIgnoring() {
+			return this.armorIgnoring;
+		}
 	}
 }

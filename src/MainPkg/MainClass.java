@@ -13,11 +13,6 @@ public class MainClass {
 	 */
 	private static boolean GameRun;
 	/**
-	 * Флаг який визначає чи потрібно виводити додаткові строки для розробника
-	 */
-	private static boolean isDebug;
-	
-	/**
 	 * Публічний екземпляр сканера для вводу даних з консолі
 	 */
 	public static Scanner scanner;
@@ -43,41 +38,20 @@ public class MainClass {
 		tools = new Tools();
 		enemies = new Enemies();
 		
-		isDebug = false;
-		if(args.length != 0 && args[0].equals("debug"))
-			isDebug = true;
-		
 		GameInit();
 		
-		String inputStr;
 		int input = 0;
 		while(GameRun) {
 			System.out.println("Перед вами стоять " + enemies.getNumOfEnemies() + " противників:");
+			enemies.printEnemies();
 			
-			for(int i = 0; i < enemies.getNumOfEnemies(); i++)
-				if(enemies.get(i).getIsAlive()) {
-					System.out.println((i + 1) + ". " + enemies.get(i).ToString());
-				}
-					
-			System.out.println("Що будемо робити?\n"
+			input = userFunctions.getUsersInput("Що будемо робити?\n"
 					+ "1. Подивитися в дзеркальце\n"
 					+ "2. Подивитися на зброю\n"
 					+ "3. Атакувати мечом\n"
 					+ "4. Атакувати списом\n"
 					+ "5. Випити зілля регенерації (+50HP)\n"
-					+ "6. Здатися (вийти з гри)");
-			try {
-				inputStr = "";
-				inputStr = scanner.nextLine();
-				
-				if(inputStr == "")
-					inputStr = scanner.nextLine();
-				input = Integer.parseInt(inputStr);
-			}
-			catch(Exception ex) {
-				System.out.println("Введіть нормальне значення");
-				continue;
-			}
+					+ "6. Здатися (вийти з гри)", 6);
 			
 			switch (input) {
 			case 1:
@@ -87,17 +61,16 @@ public class MainClass {
 				System.out.println(player.weaponToString());
 				break;
 			case 3:
-				playerAttack(true);
+				userFunctions.playerAttack(true);
 				break;
 			case 4:
-				playerAttack(false);
+				userFunctions.playerAttack(false);
 				break;
 			case 5:
 				player.drinkPotion();
 				enemies.enemyAttack(player);
 				break;
 			case 6:
-				debugLog("Debug: Exit");
 				System.exit(0);
 			default:
 				System.out.println("Введіть нормальне значення");
@@ -117,49 +90,68 @@ public class MainClass {
 		player = new Player(namePlayer, tools.getRandomSword(), tools.getRandomSpear());
 		
 		enemies.SpawnEnemy(1, tools, player);
-		
-		debugLog("Debug: Game Initilizated");
 	}
 	
-	/**
-	 * Атака гравця та перевірка чи вмерли боти або гравець
-	 * @param isSword true - Атака мечом, false - атака списом
-	 */
-	private static void playerAttack(boolean isSword) {
-		int input = enemies.getEnemyIndexToAttack();
+	public static class userFunctions{
 		
-		int damage;
-		if(isSword) {
-			damage = player.getSword().GetRandomDamage();
-			enemies.get(input - 1).damage(damage, player.getSword().GetArmorIgnoring());
+		public static int getUsersInput(String titleStr, int chooseTo) {
+			int input;
+			while(true) {
+				System.out.println(titleStr);
+				try {
+					input = scanner.nextInt();
+				}
+				catch(Exception ex) {
+					System.out.println("Введіть значення нормально");
+					continue;
+				}
+				finally {
+					scanner.nextLine();
+				}
+				
+				if(input > chooseTo || input < 0) {
+					System.out.println("Введіть значення нормально");
+					continue;
+				}
+				
+				System.out.print("\n");
+				return input;
+			}
 		}
-		else {
-			damage = player.getSpear().GetRandomDamage();
-			enemies.get(input - 1).damage(damage, player.getSpear().GetArmorIgnoring());
-		}
 		
-		System.out.print("Ви нанесли " + damage + " урона ");
-		
-		if(enemies.checkEnemyIfDead(input - 1)) 
-			System.out.print("та вбили ворога");
-		System.out.print("\n");
-		
-		if(enemies.enemyAttack(player))
-			GameInit();
-		
-		if(enemies.getNumOfEnemies() == 0) {
-			System.out.println("Ви пройшли " + player.getDungeon() + " підземелля");
-			player.dungeonUp();
-			enemies.SpawnEnemy(player.getDungeon() / 2 + 1, tools, player);
+		/**
+		 * Атака гравця та перевірка чи вмерли боти або гравець
+		 * @param isSword true - Атака мечом, false - атака списом
+		 */
+		private static void playerAttack(boolean isSword) {
+			int input = enemies.getEnemyIndexToAttack();
+			
+			int damage;
+			if(isSword) {
+				damage = player.getSword().GetRandomDamage();
+				enemies.get(input - 1).damage(damage, player.getSword().GetArmorIgnoring());
+			}
+			else {
+				damage = player.getSpear().GetRandomDamage();
+				enemies.get(input - 1).damage(damage, player.getSpear().GetArmorIgnoring());
+			}
+			
+			System.out.print("Ви нанесли " + damage + " урона ");
+			
+			if(enemies.checkEnemyIfDead(input - 1)) 
+				System.out.print("та вбили ворога");
+			System.out.print("\n");
+			
+			if(enemies.enemyAttack(player))
+				GameInit();
+			
+			if(enemies.getNumOfEnemies() == 0) {
+				System.out.println("Ви пройшли " + player.getDungeon() + " підземелля");
+				player.dungeonUp();
+				enemies.SpawnEnemy(player.getDungeon() / 2 + 1, tools, player);
+			}
 		}
 	}
 	
-	/**
-	 * Публічний метод який від залежності від флага {@link MainPkg.MainClass#isDebug} буде виводити строку str
-	 * @param str строка яку потрібно вивести
-	 */
-	public static void debugLog(String str) {
-		if(isDebug)
-			System.out.println(str);
-	}
+	
 }

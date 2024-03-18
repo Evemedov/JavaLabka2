@@ -1,7 +1,5 @@
 package tools;
 
-import MainPkg.MainClass;
-
 /**
  * Клас меча
  */
@@ -50,7 +48,6 @@ public class Sword {
 		
 		ret += "Мій меч:\n";
 		ret += "" + this.name + "\n";
-		MainClass.debugLog("Debug: ID: " + this.ID + "\n");
 		ret += "Проникний урон: " + this.prickingDamage + "\n";
 		ret += "Ріжучий урон: " + this.cuttingDamage + "\n";
 		ret += "Ігнорування броні: " + this.armorIgnoring + "\n";

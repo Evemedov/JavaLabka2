@@ -47,10 +47,8 @@ public class Enemies {
 	public void SpawnEnemy(int count, Tools tools, Player player) {
 		enemies.clear();
 		for(int i = 0; i < count; i++) {
-			enemies.add(new Enemy(tools.getRandomSword(0, player.getLvl() / 3 + 2), tools.getRandomSpear(0, player.getLvl() / 3 + 2), player.getLvl()));
+			enemies.add(new Enemy(player.getLvl() ));
 		}
-		
-		MainClass.debugLog("Debug: Spawned " + count + " enemies");
 	}
 	
 	/**
@@ -60,36 +58,37 @@ public class Enemies {
 	 */
 	public boolean enemyAttack(Player player) {
 		for(int i = 0; i < enemies.size(); i++) {
-			if(enemies.get(i).getIsAlive()) {
-				int damage = enemies.get(i).getSword().GetRandomDamage();
-				player.damage(damage, enemies.get(i).getSword().GetArmorIgnoring());
-				System.out.print("Вам нанесли " + damage + " урону ");
-				
-				if(!player.getIsAlive()) {
-					System.out.println("та на жаль вбили вас");
-					while(true) {
-						System.out.println("Бажаете спробувати ще раз?(y, yes, n, no)");
-						String input;
-						try {
-							input = MainClass.scanner.next();
-						}
-						catch(Exception ex) {
-							continue;
-						}
-						
-						if(input.equals("y") || input.equals("yes")) {
-							return true;
-						}
-						else if(input.equals("n") || input.equals("no")){
-							MainClass.debugLog("Debug: Exit");
-							System.exit(0);
-							return true;
-						}
+			if(!enemies.get(i).getIsAlive()) 
+				continue;
+			
+			int damage = enemies.get(i).getWeapon().GetDamage();
+			player.damage(damage, enemies.get(i).getWeapon().GetArmorIgnoring());
+			System.out.print("Вам нанесли " + damage + " урону ");
+			
+			if(!player.getIsAlive()) {
+				System.out.println("та на жаль вбили вас");
+				while(true) {
+					System.out.println("Бажаете спробувати ще раз?(y, yes, n, no)");
+					String input;
+					try {
+						input = MainClass.scanner.next();
+					}
+					catch(Exception ex) {
+						continue;
+					}
+					
+					if(input.equals("y") || input.equals("yes")) {
+						return true;
+					}
+					else if(input.equals("n") || input.equals("no")){
+						System.exit(0);
+						return true;
 					}
 				}
-				
-				System.out.print("\n");
 			}
+				
+			System.out.print("\n");
+			
 		}
 		return false;
 	}
@@ -119,9 +118,15 @@ public class Enemies {
 		if(!enemies.get(index).getIsAlive()) {
 			res = true;
 			enemies.remove(index);
-			MainClass.debugLog("Debug: removed " + index + " enemy");
 		}
 		
 		return res;
+	}
+	
+	public void printEnemies() {
+		for(int i = 0; i < enemies.size(); i++)
+			if(enemies.get(i).getIsAlive()) {
+				System.out.println((i + 1) + ". " + enemies.get(i).ToString());
+			}
 	}
 }
