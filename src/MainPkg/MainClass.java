@@ -38,7 +38,7 @@ public class MainClass {
 		tools = new Tools();
 		enemies = new Enemies();
 		
-		GameInit();
+		userFunctions.GameInit();
 		
 		int input = 0;
 		while(GameRun) {
@@ -79,21 +79,18 @@ public class MainClass {
 		}
 	}
 	
-	/**
-	 * Ініціалізація гри, викликається при створенні нової гри або під час першого запуску. Створення екземпляру гравця, спавн ворогів
-	 */
-	private static void GameInit() {
-		GameRun = true;
-		
-		System.out.println("Як назвати гравця?");
-		String namePlayer = scanner.nextLine();
-		player = new Player(namePlayer, tools.getRandomSword(), tools.getRandomSpear());
-		
-		enemies.SpawnEnemy(1, tools, player);
-	}
 	
+	
+	/**
+	 * Статичний клас який містить деякі функції гри
+	 */
 	public static class userFunctions{
-		
+		/**
+		 * Питає користувача цифру
+		 * @param titleStr питання яке буде виводитись
+		 * @param chooseTo до якого значення користувач має ввести значення
+		 * @return число яке ввів користувач
+		 */
 		public static int getUsersInput(String titleStr, int chooseTo) {
 			int input;
 			while(true) {
@@ -150,6 +147,19 @@ public class MainClass {
 				player.dungeonUp();
 				enemies.SpawnEnemy(player.getDungeon() / 2 + 1, tools, player);
 			}
+		}
+		
+		/**
+		 * Ініціалізація гри, викликається при створенні нової гри або під час першого запуску. Створення екземпляру гравця, спавн ворогів
+		 */
+		private static void GameInit() {
+			GameRun = true;
+			
+			System.out.println("Як назвати гравця?");
+			String namePlayer = scanner.nextLine();
+			player = new Player(namePlayer, tools.getRandomSword(), tools.getRandomSpear());
+			
+			enemies.SpawnEnemy(1, tools, player);
 		}
 	}
 	

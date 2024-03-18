@@ -13,7 +13,7 @@ public class Enemy {
 	/**
 	 * Броня ворога
 	 */
-	private int armor;
+	private Armor armor;
 	/**
 	 * Зброя ворога
 	 */
@@ -32,7 +32,7 @@ public class Enemy {
 		float randFloat = random.nextFloat(0.8f, 1.2f);
 		
 		this.healthPoint = (int)(10 * lvlOfPlayer * randFloat);
-		this.armor = (int)((1 + lvlOfPlayer) * randFloat);
+		this.armor = new Armor((int)((1 + lvlOfPlayer) * randFloat));
 		this.IsAlive = true;
 		
 		weapon = new Weapon( (int)((10 * lvlOfPlayer) * randFloat), 0.05 * lvlOfPlayer );
@@ -56,7 +56,7 @@ public class Enemy {
 	 * @param armorIgnoring Ігнорування броні зброї гравця
 	 */
 	public void damage(int damage, double armorIgnoring) {
-		this.healthPoint -= damage - ((double)this.armor * armorIgnoring);
+		this.healthPoint -= damage - ((double)this.armor.GetArmor() * armorIgnoring);
 		if(this.healthPoint <= 0)
 			this.IsAlive = false;
 	}
@@ -72,6 +72,9 @@ public class Enemy {
 		return weapon;
 	}
 	
+	/**
+	 * Вкладений клас який представляє зброю
+	 */
 	class Weapon {
 		private int damage;
 		private double armorIgnoring;
@@ -87,6 +90,21 @@ public class Enemy {
 		
 		public double GetArmorIgnoring() {
 			return this.armorIgnoring;
+		}
+	}
+	
+	/**
+	 * Вкладений клас який представляє броню
+	 */
+	class Armor{
+		private int armor;
+		
+		public Armor(int armor) {
+			this.armor = armor;
+		}
+		
+		public int GetArmor() {
+			return this.armor;
 		}
 	}
 }
